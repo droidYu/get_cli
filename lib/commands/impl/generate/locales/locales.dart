@@ -74,7 +74,7 @@ class GenerateLocalesCommand extends Command {
           });
         }
         File newFile=File(file.path);
-        newFile.writeAsString(map.toString());
+        newFile.writeAsString(jsonEncode(map));
         maps[localeKey] = map as Map<String, dynamic>?;
       } on Exception catch (_) {
         LogService.error(LocaleKeys.error_invalid_json.trArgs([file.path]));
