@@ -67,32 +67,32 @@ class GenerateLocalesCommand extends Command {
         if (addFile.existsSync()) {
           Map<String, dynamic>? addJsonMap =
               jsonDecode(await File(addFile.path).readAsString());
-          if (addJsonMap == null) return;
-          Map<String, dynamic> addJson = addJsonMap[localeKey] ?? {};
-          addJson = await _renameJsonKey(addJson);
-          addJson.forEach((k, v) {
-            if (map[k] == null) {
-              map.putIfAbsent(k, () => v);
-            } else {
-              map[k] = v;
-            }
-          });
+          if (addJsonMap != null) {
+            Map<String, dynamic> addJson = addJsonMap[localeKey] ?? {};
+            addJson = await _renameJsonKey(addJson);
+            addJson.forEach((k, v) {
+              if (map[k] == null) {
+                map.putIfAbsent(k, () => v);
+              } else {
+                map[k] = v;
+              }
+            });
+            File newFile = File(file.path);
+            StringBuffer sb = StringBuffer();
+            String content = '';
+            sb.writeln('{');
+            map.forEach((k, v) {
+              v = v.replaceAll('\n', '\\n').replaceAll('\$', '\\\$');
+              sb.writeln('  "$k": "$v",');
+            });
+            content = sb.toString().substring(0, sb.toString().length - 2);
+            sb = StringBuffer(content);
+            sb.writeln('');
+            sb.writeln('}');
+            content = sb.toString();
+            newFile.writeAsString(content);
+          }
         }
-        File newFile = File(file.path);
-        StringBuffer sb = StringBuffer();
-        String content = '';
-        sb.writeln('{');
-        map.forEach((k, v) {
-          v = v.replaceAll('\n', '\\n').replaceAll('\$', '\\\$');
-          sb.writeln('  "$k": "$v",');
-        });
-        content = sb.toString().substring(0, sb.toString().length - 2);
-        sb = StringBuffer(content);
-        sb.writeln('');
-        sb.writeln('}');
-        content = sb.toString();
-
-        newFile.writeAsString(content);
         maps[localeKey] = map as Map<String, dynamic>?;
       } on Exception catch (_) {
         LogService.error(LocaleKeys.error_invalid_json.trArgs([file.path]));
