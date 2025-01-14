@@ -81,9 +81,9 @@ class GenerateLocalesCommand extends Command {
         String content='';
         sb.writeln('{');
         map.forEach((k,v){
-          sb.writeln('\t\t\'$k\': \'$v\',');
+          sb.writeln('\t\t"$k": "$v",');
         });
-        content=sb.toString().substring(0,sb.toString().length-1);
+        content=sb.toString().substring(0,sb.toString().length-2);
         sb=StringBuffer(content);
         sb.writeln('}');
         content=sb.toString();
