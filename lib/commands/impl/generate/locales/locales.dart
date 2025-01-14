@@ -89,6 +89,7 @@ class GenerateLocalesCommand extends Command {
         });
         content = sb.toString().substring(0, sb.toString().length - 2);
         sb = StringBuffer(content);
+        sb.writeln('');
         sb.writeln('}');
         content = sb.toString();
 
