@@ -14,6 +14,7 @@ import '../../../interface/command.dart';
 class GenerateLocalesCommand extends Command {
   @override
   String get commandName => 'locales';
+
   @override
   String? get hint => Translation(LocaleKeys.hint_generate_locales).tr;
 
@@ -22,7 +23,8 @@ class GenerateLocalesCommand extends Command {
     return true;
   }
 
-  Future<Map<String, dynamic>> _renameJsonKey(Map<String, dynamic>? json) async {
+  Future<Map<String, dynamic>> _renameJsonKey(
+      Map<String, dynamic>? json) async {
     if (json == null) return {};
     Map<String, dynamic> newJson = {};
     for (final String key in json.keys) {
@@ -35,8 +37,8 @@ class GenerateLocalesCommand extends Command {
 
   @override
   Future<void> execute() async {
-    final addTrPath='assets/json/addTr.json';
-    File addFile =File(addTrPath);
+    final addTrPath = 'assets/json/addTr.json';
+    File addFile = File(addTrPath);
     final inputPath = args.isNotEmpty ? args.first : 'assets/locales';
 
     if (!await Directory(inputPath).exists()) {
@@ -58,13 +60,14 @@ class GenerateLocalesCommand extends Command {
     final maps = <String, Map<String, dynamic>?>{};
     for (var file in files) {
       try {
-        final map = jsonDecode(await File(file.path).readAsString());
+        final Map<String, dynamic> map = jsonDecode(await File(file.path).readAsString());
 
         final localeKey = basenameWithoutExtension(file.path);
-        if(addFile.existsSync()){
-          Map<String, dynamic>? addJsonMap = jsonDecode(await File(addFile.path).readAsString());
-          Map<String, dynamic> addJson = addJsonMap?[localeKey]??{};
-          addJson=await _renameJsonKey(addJson);
+        if (addFile.existsSync()) {
+          Map<String, dynamic>? addJsonMap =
+              jsonDecode(await File(addFile.path).readAsString());
+          Map<String, dynamic> addJson = addJsonMap?[localeKey] ?? {};
+          addJson = await _renameJsonKey(addJson);
           addJson.forEach((k, v) {
             if (map[k] == null) {
               map.putIfAbsent(k, () => v);
@@ -73,8 +76,19 @@ class GenerateLocalesCommand extends Command {
             }
           });
         }
-        File newFile=File(file.path);
-        newFile.writeAsString(jsonEncode(map));
+        File newFile = File(file.path);
+        StringBuffer sb=StringBuffer();
+        String content='';
+        sb.writeln('{');
+        map.forEach((k,v){
+          sb.writeln('\t\t\'$k\': \'$v\',');
+        });
+        content=sb.toString().substring(0,sb.toString().length-1);
+        sb=StringBuffer(content);
+        sb.writeln('}');
+        content=sb.toString();
+
+        newFile.writeAsString(content);
         maps[localeKey] = map as Map<String, dynamic>?;
       } on Exception catch (_) {
         LogService.error(LocaleKeys.error_invalid_json.trArgs([file.path]));
