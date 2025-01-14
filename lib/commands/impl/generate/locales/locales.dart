@@ -22,6 +22,17 @@ class GenerateLocalesCommand extends Command {
     return true;
   }
 
+  Future<Map<String, dynamic>> _renameJsonKey(Map<String, dynamic>? json) async {
+    if (json == null) return {};
+    Map<String, dynamic> newJson = {};
+    for (final String key in json.keys) {
+      String newKey = key.toLowerCase().replaceAll(' ', '_');
+      String value = json[key] ?? '';
+      newJson.putIfAbsent(newKey, () => value);
+    }
+    return newJson;
+  }
+
   @override
   Future<void> execute() async {
     final addTrPath='assets/json/addTr.json';
@@ -53,6 +64,7 @@ class GenerateLocalesCommand extends Command {
         if(addFile.existsSync()){
           Map<String, dynamic>? addJsonMap = jsonDecode(await File(addFile.path).readAsString());
           Map<String, dynamic> addJson = addJsonMap?[localeKey]??{};
+          addJson=await _renameJsonKey(addJson);
           addJson.forEach((k, v) {
             if (map[k] == null) {
               map.putIfAbsent(k, () => v);
