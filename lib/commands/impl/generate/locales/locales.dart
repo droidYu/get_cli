@@ -24,6 +24,8 @@ class GenerateLocalesCommand extends Command {
 
   @override
   Future<void> execute() async {
+    final addTrPath='assets/json/addTr.json';
+    File addFile =File(addTrPath);
     final inputPath = args.isNotEmpty ? args.first : 'assets/locales';
 
     if (!await Directory(inputPath).exists()) {
@@ -46,7 +48,21 @@ class GenerateLocalesCommand extends Command {
     for (var file in files) {
       try {
         final map = jsonDecode(await File(file.path).readAsString());
+
         final localeKey = basenameWithoutExtension(file.path);
+        if(addFile.existsSync()){
+          Map<String, dynamic>? addJsonMap = jsonDecode(await File(addFile.path).readAsString());
+          Map<String, dynamic> addJson = addJsonMap?[localeKey]??{};
+          addJson.forEach((k, v) {
+            if (map[k] == null) {
+              map.putIfAbsent(k, () => v);
+            } else {
+              map[k] = v;
+            }
+          });
+        }
+        File newFile=File(file.path);
+        newFile.writeAsString(map.toString());
         maps[localeKey] = map as Map<String, dynamic>?;
       } on Exception catch (_) {
         LogService.error(LocaleKeys.error_invalid_json.trArgs([file.path]));
