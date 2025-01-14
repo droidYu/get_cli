@@ -60,7 +60,8 @@ class GenerateLocalesCommand extends Command {
     final maps = <String, Map<String, dynamic>?>{};
     for (var file in files) {
       try {
-        final Map<String, dynamic> map = jsonDecode(await File(file.path).readAsString());
+        final Map<String, dynamic> map =
+            jsonDecode(await File(file.path).readAsString());
 
         final localeKey = basenameWithoutExtension(file.path);
         if (addFile.existsSync()) {
@@ -77,17 +78,17 @@ class GenerateLocalesCommand extends Command {
           });
         }
         File newFile = File(file.path);
-        StringBuffer sb=StringBuffer();
-        String content='';
+        StringBuffer sb = StringBuffer();
+        String content = '';
         sb.writeln('{');
-        map.forEach((k,v){
+        map.forEach((k, v) {
           v = _replaceValue(v);
           sb.writeln('  "$k": "$v",');
         });
-        content=sb.toString().substring(0,sb.toString().length-2);
-        sb=StringBuffer(content);
+        content = sb.toString().substring(0, sb.toString().length - 2);
+        sb = StringBuffer(content);
         sb.writeln('}');
-        content=sb.toString();
+        content = sb.toString();
 
         newFile.writeAsString(content);
         maps[localeKey] = map as Map<String, dynamic>?;
@@ -170,7 +171,7 @@ class GenerateLocalesCommand extends Command {
 
 String _replaceValue(String value) {
   return value
-      .replaceAll("'", "\\'")
+      // .replaceAll("'", "\\'")
       .replaceAll('\n', '\\n')
       .replaceAll('\$', '\\\$');
 }
