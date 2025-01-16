@@ -82,7 +82,7 @@ class GenerateLocalesCommand extends Command {
             String content = '';
             sb.writeln('{');
             map.forEach((k, v) {
-              v = v.replaceAll('\n', '\\n').replaceAll('\$', '\\\$').replaceAll('\@', '\\@');
+              v = v.replaceAll('\n', '\\n').replaceAll('\$', '\\\$');
               sb.writeln('  "$k": "$v",');
             });
             content = sb.toString().substring(0, sb.toString().length - 2);
