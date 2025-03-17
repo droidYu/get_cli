@@ -27,17 +27,8 @@ class $_viewName extends $_controllerName {
  const $_viewName({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('$_viewName'),
-        centerTitle: true,
-      ),
-      body:const Center(
-        child: Text(
-          '$_viewName is working', 
-          style: TextStyle(fontSize:20),
-        ),
-      ),
+    return GetBuilder<$_controller>(
+      builder: (controller) => Container(),
     );
   }
 }
