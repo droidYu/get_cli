@@ -46,9 +46,9 @@ class CreateViewCommand extends Command {
 Future<void> createView(String name,
     {String withArgument = '', String onCommand = ''}) async {
   var sample = GetViewSample(
-    '${name.pascalCase}Controller',
-    '${name.pascalCase}View',
     '',
+    '${name.pascalCase}View',
+    '${name.pascalCase}Controller',
     '',
     PubspecUtils.isServerProject,
   );
