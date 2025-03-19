@@ -28,6 +28,7 @@ class $_viewName extends $_controllerName {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<$_controller>(
+      init: $_controller(),
       builder: (controller) => Container(),
     );
   }
