@@ -74,7 +74,7 @@ Future<void> createView(String name,
     }
   }
 
-  handleFileCreate(name, 'view', onCommand, true, sample, 'view');
+  handleFileCreate(name, 'view', onCommand, true, sample, '');
 }
 
 Future<void> createController(String name,
