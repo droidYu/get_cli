@@ -74,7 +74,7 @@ Future<void> createView(String name,
     }
   }
 
-  handleFileCreate(name, 'view', onCommand, true, sample, '');
+  handleFileCreate(name, 'view', onCommand, true, sample, 'view');
 }
 
 Future<void> createController(String name,
@@ -107,7 +107,7 @@ Future<void> createController(String name,
     onCommand,
     true,
     sample,
-    '',
+    'controller',
   );
 
   var binindingPath =
